@@ -1,0 +1,31 @@
+MQTT:
+  ClientID: MockIoTopia
+  Host: "a2f8qpo41xhi6t-ats.iot.eu-west-1.amazonaws.com"
+  Port: 8883
+  Topic: "123"
+  Certificates:
+    ca_cert: "certificates/AmazonRootCA1.pem"
+    client_cert: "certificates/certificate.pem.crt"
+    client_key: "certificates/private.pem.key"
+Miscellanea:
+  interval_ms: 5000
+Messages:
+  Fields:
+    - 
+      Name: Field1
+      Description: "Esto es Field1"
+      Type: int
+      Max: 10
+      Min: 0
+      Behaviour:
+        Type: Random
+    - 
+      Name: Field2
+      Description: "Esto es Field1"
+      Type: int
+      Max: 10
+      Min: 0
+      Behaviour:
+        Type: Permanent
+        VariationProbability: 0.5
+        VariationMagnitude: 0.5

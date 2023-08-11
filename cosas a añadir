@@ -1,0 +1,12 @@
+antes de ejecutarlo de seguido que te muestre un ejemplo por log
+
+
+
+
+
+file Configuración
+    typo int, string, double, timestmap(varios tipos, milis y ISO)
+    max min
+    % de mantenimiento
+    % de outlayers
+    nombre
