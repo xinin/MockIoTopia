@@ -8,20 +8,20 @@ MQTT:
     client_cert: "certificates/certificate.pem.crt"
     client_key: "certificates/private.pem.key"
 Miscellanea:
-  interval_ms: 5000
+  interval_ms: 2000
 Messages:
   Fields:
     - 
-      Name: Field1
-      Description: "Esto es Field1"
+      Name: Int_Random
+      Description: "Example of a Int_Random"
       Type: int
       Max: 10
       Min: 0
       Behaviour:
         Type: Random
     - 
-      Name: Field2
-      Description: "Esto es Field1"
+      Name: Int_Permanent
+      Description: "Example of a Int_Permanent"
       Type: int
       Max: 10
       Min: 0
@@ -29,3 +29,73 @@ Messages:
         Type: Permanent
         VariationProbability: 0.5
         VariationMagnitude: 0.5
+    -
+      Name: Float_Random
+      Description: "Example of a Float_Random"
+      Type: float
+      Max: 10
+      Min: 0
+      Decimals: 4
+      Behaviour:
+        Type: Random
+    - 
+      Name: Float_Permanent
+      Description: "Example of a Float_Permanent"
+      Type: float
+      Max: 10
+      Min: 0
+      Decimals: 3
+      Behaviour:
+        Type: Permanent
+        VariationProbability: 0.5
+        VariationMagnitude: 0.5
+    - 
+      Name: Boolean_Random
+      Description: "Example of a Boolean_Random"
+      Type: boolean
+      Behaviour:
+        Type: Random
+    - 
+      Name: Boolean_Permanent
+      Description: "Example of a Boolean_Permanent"
+      Type: boolean
+      Behaviour:
+        Type: Permanent
+        VariationProbability: 0.5
+        Default: 0
+    - 
+      Name: String_Random
+      Description: "Example of a String_Random"
+      Type: string
+      Behaviour:
+        Type: Random
+        Length: 50
+    - 
+      Name: String_Permanent
+      Description: "Example of a String_Permanent"
+      Type: string
+      Behaviour:
+        Type: Permanent
+        Default: "This is an string example"
+    - 
+      Name: Date_UnixEpoch
+      Description: "Example of a Date_UnixEpoch"
+      Type: date
+      Behaviour:
+        Type: UnixEpoch
+    - 
+      Name: Date_UnixEpochMilis
+      Description: "Example of a Date_UnixEpochMilis"
+      Type: date
+      Behaviour:
+        Type: UnixEpochMilis
+    - 
+      Name: Date_ISO8601
+      Description: "Example of a Date_ISO8601"
+      Type: date
+      Behaviour:
+        Type: ISO8601
+
+  
+
+

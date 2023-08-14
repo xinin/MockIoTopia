@@ -10,7 +10,6 @@ import yaml
 from yaml.loader import SafeLoader
 
 from message_generator import generate_message
-from exceptions import FieldSintaxError
  
 parser = argparse.ArgumentParser(description="MockIoTopia")
 #TODO HACER UN HELP y cambiar los parametros para que tengo sentido en el futuro, todo en ingles
@@ -61,18 +60,19 @@ try:
     # Callback function on connection establishment
     def on_connect(client, userdata, flags, rc):
         print("Connected with the code:", rc)
+        #TODO meter aqui en bucle principal
 
     # Create MQTT client instance with TLS/SSL
     client = mqtt.Client(client_id=mqtt_client_id)
     client.tls_set(ca_certs=mqtt_ca_cert, certfile=mqtt_client_cert, keyfile=mqtt_client_key, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2)
 
-    # Configurar callbacks
+    # Configure callbacks
     client.on_connect = on_connect
 
-    # Conectar al broker
+    # Connection to the host
     client.connect(mqtt_host, mqtt_port)
 
-    # Iniciar loop para manejar comunicación
+    # Start loop to manage communication
     client.loop_start()
   
     message = None
@@ -80,10 +80,12 @@ try:
     try:
         while True:
             message = generate_message(config["Messages"], message)
-            print("current message", message)
             client.publish(mqtt_topic, json.dumps(message))
+            if args.verbose:
+                print(message)
             time.sleep(interval/1000)
     except KeyboardInterrupt:
+        # Finish loop and close connection
         print("Disconnection requested by the user.")
         client.disconnect()
         client.loop_stop()
