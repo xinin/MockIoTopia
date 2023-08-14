@@ -13,9 +13,8 @@ from yaml.loader import SafeLoader
 from message_generator import generate_message
  
 parser = argparse.ArgumentParser(description="MockIoTopia")
-#TODO HACER UN HELP y cambiar los parametros para que tengo sentido en el futuro, todo en ingles
-parser.add_argument("-v", "--verbose", help="Mostrar información de depuración", action="store_true")
-parser.add_argument("-c", "--config", help="Ruta fichero configuración", type=str)
+parser.add_argument("-v", "--verbose", help="Show debugging information", action="store_true")
+parser.add_argument("-c", "--config", help="Path configuration file", type=str)
 
 args = parser.parse_args()
 
