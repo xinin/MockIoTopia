@@ -1,4 +1,4 @@
-class FieldSintaxError(Exception):
+class FieldSyntaxError(Exception):
     """Exception raised for errors in the input field.
 
     Attributes:

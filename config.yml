@@ -95,6 +95,112 @@ Messages:
       Type: date
       Behaviour:
         Type: ISO8601
+    - Name: Object
+      Description: "Example of an Object field"
+      Type: object
+      Fields:
+        - 
+          Name: "Int_field"
+          Description: "Example of a Int_Permanent"
+          Type: int
+          Max: 10
+          Min: 0
+          Behaviour:
+            Type: Permanent
+            VariationProbability: 0.1
+            VariationMagnitude: 0.5
+        -
+          Name: "Array_field"
+          Description: "Example of an Array"
+          Type: array
+          Fields:
+            - 
+              Description: "Example of a Int_Permanent"
+              Type: int
+              Max: 10
+              Min: 0
+              Behaviour:
+                Type: Permanent
+                VariationProbability: 0.1
+                VariationMagnitude: 0.5
+            -
+              Description: "Example of a Date_ISO8601"
+              Type: date
+              Behaviour:
+                Type: ISO8601
+            - 
+              Description: "Example of a Int_Random"
+              Type: int
+              Max: 10
+              Min: 0
+              Behaviour:
+                Type: Random
+    -
+      Name: Array
+      Description: "Example of an Array"
+      Type: array
+      Fields:
+        - 
+          Description: "Example of a Int_Permanent"
+          Type: int
+          Max: 10
+          Min: 0
+          Behaviour:
+            Type: Permanent
+            VariationProbability: 0.1
+            VariationMagnitude: 0.5
+        -
+          Description: "Example of a Date_ISO8601"
+          Type: date
+          Behaviour:
+            Type: ISO8601
+        - 
+          Description: "Example of a Int_Random"
+          Type: int
+          Max: 10
+          Min: 0
+          Behaviour:
+            Type: Random
+        -
+          Description: "Example of an Array"
+          Type: array
+          Fields:
+            - 
+              Description: "Example of a Int_Permanent"
+              Type: int
+              Max: 10
+              Min: 0
+              Behaviour:
+                Type: Permanent
+                VariationProbability: 0.1
+                VariationMagnitude: 0.5
+            -
+              Description: "Example of a Date_ISO8601"
+              Type: date
+              Behaviour:
+                Type: ISO8601
+            - 
+              Description: "Example of a Int_Random"
+              Type: int
+              Max: 10
+              Min: 0
+              Behaviour:
+                Type: Random
+            - 
+              Description: "Example of an Object field"
+              Type: object
+              Fields:
+                - 
+                  Name: "Int_field"
+                  Description: "Example of a Int_Permanent"
+                  Type: int
+                  Max: 10
+                  Min: 0
+                  Behaviour:
+                    Type: Permanent
+                    VariationProbability: 0.1
+                    VariationMagnitude: 0.5
+
 
   
 

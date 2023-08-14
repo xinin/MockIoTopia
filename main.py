@@ -80,7 +80,7 @@ try:
     try:
         while True:
             message = generate_message(config["Messages"], message)
-            client.publish(mqtt_topic, json.dumps(message))
+            #client.publish(mqtt_topic, json.dumps(message))
             if args.verbose:
                 print(message)
             time.sleep(interval/1000)

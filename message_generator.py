@@ -4,29 +4,54 @@ import random
 import time
 from datetime import datetime
 
+from exceptions import FieldSyntaxError, FieldNotSupportedError
 
+def generate_message(config, previous_message, is_array = False):
 
-from exceptions import FieldSintaxError, FieldNotSupportedError
+    if is_array:
+        current_message = []
+    else:
+        current_message = {}
 
-
-def generate_message(config, previuos_message):
-
-    current_message = {}
+    new_value = None
+    previuos_message_field = None
 
     try:
-        for field_config in config["Fields"]:
+        for i,field_config in enumerate(config["Fields"]):
             try:
+
+                if "Name" in field_config:
+                    field_name = field_config["Name"]
+                else:
+                    field_name = None
+
+                if previous_message != None:
+                    if field_name != None:
+                        previuos_message_field = previous_message[field_name]
+                    else:
+                        previuos_message_field = previous_message[i]
+
                 if (field_config["Type"] == "int"):
-                    current_message.update(number_field(field_config, previuos_message, True))
+                    new_value = number_field(field_config, previuos_message_field, True)
                 elif (field_config["Type"] == "float"):
-                    current_message.update(number_field(field_config, previuos_message, False))
+                    new_value = number_field(field_config, previuos_message_field, False)
                 elif (field_config["Type"] == "boolean"):
-                    current_message.update(boolean_field(field_config, previuos_message))
+                    new_value = boolean_field(field_config, previuos_message_field)
                 elif (field_config["Type"] == "string"):
-                    current_message.update(string_field(field_config))
+                    new_value = string_field(field_config)
                 elif (field_config["Type"] == "date"):
-                    current_message.update(date_field(field_config))
-            except FieldSintaxError as e:
+                    new_value = date_field(field_config)
+                elif (field_config["Type"] == "object"):
+                    new_value = generate_message(field_config,previuos_message_field,False)    
+                elif (field_config["Type"] == "array"):
+                    new_value = generate_message(field_config,previuos_message_field,True)                    
+               
+                if field_name:
+                    current_message.update({field_name: new_value})
+                else:
+                    current_message.append(new_value)
+
+            except FieldSyntaxError as e:
                 traceback.print_exc()
                 sys.exit()
             except:
@@ -36,11 +61,11 @@ def generate_message(config, previuos_message):
         traceback.print_exc()
         sys.exit()
 
+
     return current_message
 
 def number_field(field_config, previuos_message, is_int):
     try:
-        name = field_config["Name"]
         _max = field_config["Max"]
         _min = field_config["Min"]
         behaviour = field_config["Behaviour"]
@@ -59,40 +84,39 @@ def number_field(field_config, previuos_message, is_int):
                 field_value = round(random.uniform(_min, _max), decimals)
 
         else:
-            field_value = previuos_message[name]
+            field_value = previuos_message
             if random.random() < behaviour["VariationProbability"]:
-                variation = previuos_message[name] * behaviour["VariationMagnitude"]
+                variation = previuos_message * behaviour["VariationMagnitude"]
                 field_value += random.choice([-1, 1]) * variation
                 field_value = max(_min, min(_max, field_value))
 
         if is_int:
             #INT
-            return {name: round(field_value)}
+            return round(field_value)
         else:  
             #FLOAT
-            return {name: round(field_value, decimals)}
+            return round(field_value, decimals)
     except:
-        raise FieldSintaxError(field_config, "Field Sintaxt Error")
+        raise FieldSyntaxError(field_config, "Field Sintaxt Error")
 
 def boolean_field(field_config, previuos_message):
     try:
-        name = field_config["Name"]
         behaviour = field_config["Behaviour"]
         field_value = None
 
         if behaviour["Type"] == "Random":
-            return {name: random.choice([1, 0])}
+            return random.choice([1, 0])
         else:
             if previuos_message == None:
-                return {name: behaviour["Default"]}
+                return behaviour["Default"]
             else:
                 field_value = behaviour["Default"]
                 if random.random() < behaviour["VariationProbability"]:
                     field_value = 1 - field_value
-                return {name: field_value}
+                return field_value
 
     except:
-        raise FieldSintaxError(field_config, "Field Sintaxt Error")
+        raise FieldSyntaxError(field_config, "Field Sintaxt Error")
 
 
 def generate_random_sentence(total_characters):
@@ -127,31 +151,29 @@ def generate_random_sentence(total_characters):
 
 def string_field(field_config):
     try:
-        name = field_config["Name"]
         behaviour = field_config["Behaviour"]
 
         if behaviour["Type"] == "Random":
-            return {name: generate_random_sentence(behaviour["Length"])}
+            return generate_random_sentence(behaviour["Length"])
         else:          
-            return {name: behaviour["Default"]}
+            return behaviour["Default"]
 
     except:
-        raise FieldSintaxError(field_config, "Field Sintaxt Error")
+        raise FieldSyntaxError(field_config, "Field Sintaxt Error")
     
 
 def date_field(field_config):
     try:
-        name = field_config["Name"]
         behaviour = field_config["Behaviour"]
         
         if behaviour["Type"] == "UnixEpoch":
-            return {name: int(time.time())}
+            return int(time.time())
         elif behaviour["Type"] == "UnixEpochMilis":
-            return {name: int(time.time() * 1000)}
+            return int(time.time() * 1000)
         elif behaviour["Type"] == "ISO8601":
-            return {name: datetime.utcnow().isoformat()}
+            return datetime.utcnow().isoformat()
         
     except:
-        raise FieldSintaxError(field_config, "Field Sintaxt Error")
+        raise FieldSyntaxError(field_config, "Field Sintaxt Error")
 
 
