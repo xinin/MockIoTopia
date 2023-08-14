@@ -6,61 +6,44 @@ from datetime import datetime
 
 from exceptions import FieldSyntaxError, FieldNotSupportedError
 
-def generate_message(config, previous_message, is_array = False):
 
-    if is_array:
-        current_message = []
-    else:
-        current_message = {}
-
-    new_value = None
-    previuos_message_field = None
+def generate_message(config, previous_message, is_array=False):
+    current_message = [] if is_array else {}
 
     try:
-        for i,field_config in enumerate(config["Fields"]):
-            try:
+        for field_config in config.get("Fields", []):
+            field_name = field_config.get("Name")
 
-                if "Name" in field_config:
-                    field_name = field_config["Name"]
+            previuos_message_field = None
+            if previous_message is not None:
+                if field_name is not None:
+                    previuos_message_field = previous_message.get(field_name)
                 else:
-                    field_name = None
+                    previuos_message_field = previous_message[len(current_message)]
 
-                if previous_message != None:
-                    if field_name != None:
-                        previuos_message_field = previous_message[field_name]
-                    else:
-                        previuos_message_field = previous_message[i]
-
-                if (field_config["Type"] == "int"):
-                    new_value = number_field(field_config, previuos_message_field, True)
-                elif (field_config["Type"] == "float"):
-                    new_value = number_field(field_config, previuos_message_field, False)
-                elif (field_config["Type"] == "boolean"):
-                    new_value = boolean_field(field_config, previuos_message_field)
-                elif (field_config["Type"] == "string"):
-                    new_value = string_field(field_config)
-                elif (field_config["Type"] == "date"):
-                    new_value = date_field(field_config)
-                elif (field_config["Type"] == "object"):
-                    new_value = generate_message(field_config,previuos_message_field,False)    
-                elif (field_config["Type"] == "array"):
-                    new_value = generate_message(field_config,previuos_message_field,True)                    
-               
-                if field_name:
-                    current_message.update({field_name: new_value})
-                else:
-                    current_message.append(new_value)
-
-            except FieldSyntaxError as e:
-                traceback.print_exc()
-                sys.exit()
-            except:
+            field_type = field_config["Type"]
+            if field_type in ("int", "float"):
+                new_value = number_field(field_config, previuos_message_field, field_type == "int")
+            elif field_type == "boolean":
+                new_value = boolean_field(field_config, previuos_message_field)
+            elif field_type == "string":
+                new_value = string_field(field_config)
+            elif field_type == "date":
+                new_value = date_field(field_config)
+            elif field_type in ("object", "array"):
+                new_value = generate_message(field_config, previuos_message_field, field_type == "array")
+            else:
                 raise FieldNotSupportedError(field_config, "Field not supported")
-    except(KeyError):
+
+            if field_name:
+                current_message[field_name] = new_value
+            else:
+                current_message.append(new_value)
+
+    except (KeyError, FieldSyntaxError):
         print("\nERROR parsing Fields configuration")
         traceback.print_exc()
         sys.exit()
-
 
     return current_message
 
