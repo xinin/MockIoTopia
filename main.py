@@ -90,7 +90,7 @@ try:
             if random.random() < loss_probability:
                 print("## MESSAGE LOST ##", message, "\n-------------------------")
             else:
-                #client.publish(mqtt_topic, json.dumps(message))
+                client.publish(mqtt_topic, json.dumps(message))
                 if args.verbose:
                     print(message, "\n-------------------------")
             time.sleep(interval/1000)
