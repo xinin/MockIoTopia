@@ -4,6 +4,7 @@ import traceback
 import time
 import ssl
 import json
+import random
 
 import paho.mqtt.client as mqtt
 import yaml
@@ -19,6 +20,7 @@ parser.add_argument("-c", "--config", help="Ruta fichero configuración", type=s
 args = parser.parse_args()
 
 config = None
+connected = False
 
 if not args.config:
     print("ERROR: The path to the IoT message configuration file is required to continue.")
@@ -44,7 +46,8 @@ print("Configuration: \n")
 print(yaml.safe_dump(config))
 
 try:
-    interval =  config["Miscellanea"]["interval_ms"]
+    interval =  config["Miscellanea"]["IntervalMilis"]
+    loss_probability =  config["Miscellanea"]["MessageLossProbability"]
 
     print("\nEstablishing the connection ... ")
 
@@ -59,8 +62,9 @@ try:
 
     # Callback function on connection establishment
     def on_connect(client, userdata, flags, rc):
+        global connected
         print("Connected with the code:", rc)
-        #TODO meter aqui en bucle principal
+        connected = True
 
     # Create MQTT client instance with TLS/SSL
     client = mqtt.Client(client_id=mqtt_client_id)
@@ -78,12 +82,19 @@ try:
     message = None
 
     try:
+        while not connected:
+            time.sleep(1)
+
         while True:
             message = generate_message(config["Messages"], message)
-            #client.publish(mqtt_topic, json.dumps(message))
-            if args.verbose:
-                print(message)
+            if random.random() < loss_probability:
+                print("## MESSAGE LOST ##", message, "\n-------------------------")
+            else:
+                #client.publish(mqtt_topic, json.dumps(message))
+                if args.verbose:
+                    print(message, "\n-------------------------")
             time.sleep(interval/1000)
+    
     except KeyboardInterrupt:
         # Finish loop and close connection
         print("Disconnection requested by the user.")
