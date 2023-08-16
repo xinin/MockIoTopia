@@ -9,7 +9,7 @@ The objective of this tool is the simulation of an IoT device which sends custom
 </p>
 
 ## 1. Configuration
-To customize the tool's operation, a YAML configuration file is employed. You can refer to the **example_config.yml** file for instances demonstrating all potential functionalities.
+To customize the tool's operation, a YAML configuration file is employed. You can refer to the `example_config.yml` file for instances demonstrating all potential functionalities.
 
 The file is divided into several sections
 
@@ -57,12 +57,12 @@ There are different types of fields available to include in messages
 
 #### 1.3.1. Integer
 
-Simulating fields with integer type involves adjusting their operation through the **primary settings, specifically the Max and Min values**.
+Simulating fields with integer type involves adjusting their operation through the **primary settings, specifically the** `Max` **and **`Min`** values**.
 
 These fields can exhibit either a randomized pattern or adhere to a predefined probability and extent of alteration.
 
-This configuration is established within the "Behaviour" section, where the choice between **Random** or **Permanent** is indicated.
-In the case of the latter, parameters like **VariationProbability** and **VariationMagnitude**, representing probabilities ranging from 0 to 1, should be included.
+This configuration is established within the `Behaviour` section, where the **choice** between `Random` or `Permanent` is indicated.
+In the case of the latter, parameters like `VariationProbability` and `VariationMagnitude`, representing probabilities ranging from 0 to 1, should be included.
 
 ``````
     -
@@ -87,7 +87,7 @@ In the case of the latter, parameters like **VariationProbability** and **Variat
 
 #### 1.3.2. Float
 
-Similar to the integer case, the behavior remains consistent; however, an additional parameter called **Decimals** is introduced to indicate the number of decimal places.
+Similar to the integer case, the behavior remains consistent; however, an additional parameter called `Decimals` is introduced to indicate the number of decimal places.
 
 ```
     -
@@ -113,9 +113,12 @@ Similar to the integer case, the behavior remains consistent; however, an additi
 ```
 #### 1.3.3. Boolean
 
-These parameter types are employed to simulate the behavior of boolean values, which can either be random or adhere to a probability of variation defined by the **VariationProbability** parameter and the specification of the default value using the **Default** parameter. 
+These parameter types are employed to simulate the behavior of boolean values, which can either be random or adhere to a probability of variation defined by the `VariationProbability` parameter and the specification of the default value using the `Default` parameter. 
+
 The resulting values are 0 or 1.
-> Unlike the other parameters, the Boolean_Permanent type reverts to the Default state after a change triggered by its VariationProbability, with the aim of simulating flags in a real environment. If this behavior is not desired, it is advisable to use the Int_Permanent type.
+
+> Unlike the other parameters, the `Boolean_Permanent` type reverts to the `Default` state after a change triggered by its `VariationProbability`, with the aim of simulating flags in a real environment. 
+If this behavior is not desired, it is advisable to use the `Int_Permanent` type.
 
 ```
     - 
@@ -135,8 +138,8 @@ The resulting values are 0 or 1.
 ```
 
 #### 1.3.4. String
-Parameter type that simulates text strings, similarly to the other cases, we have the random mode, which we modify the output dimension through the Length parameter. 
-On the other hand, we have the permanent option where we must provide the default value.
+Parameter type that simulates text strings, similarly to the other cases, we have the `Random` mode, which we modify the output dimension through the `Length` parameter. 
+On the other hand, there is the `Permanent` option where a `Default` value must be provided.
 
 ```
 - 
@@ -156,16 +159,16 @@ On the other hand, we have the permanent option where we must provide the defaul
 ```
 
 #### 1.3.5. Date
-The last type of parameter is the date field, which has different formats, which is controlled by the Type field in the Behaviour section.
+The last type of parameter is the date field, which has different formats, which is controlled by the `Type` field in the `Behaviour` section.
 
 - **Date_UnixEpoch:** The Unix epoch (or Unix time or POSIX time or Unix timestamp) is the number of seconds that have elapsed since January 1, 1970 (midnight UTC/GMT). 
->For example 1692170608
+>For example: 1692170608
 
 - **Date_UnixEpochMilis:** The Unix epoch in miliseconds.
->For example 1692170608177
+>For example: 1692170608177
 
 - **Date_ISO8601:** Date in ISO 8601 format in UTC
->For example "2023-08-16T07:23:28.177668"
+>For example: "2023-08-16T07:23:28.177668"
 
 ```
     - 
@@ -189,8 +192,8 @@ The last type of parameter is the date field, which has different formats, which
 ```
 
 #### 1.3.6. Array
-The Array format makes use of the other data types mentioned above.
-> It is important **not to include the Name field** in the Array components and to indicate them in the order in which you want to have the output order.
+The `Array` format makes use of the other data types mentioned above.
+> It is important **not to include the** `Name` **field** in the array components and to indicate them in the order in which you want to have the output order.
 ```
     -
       Name: My_Parameter_Array
@@ -214,8 +217,8 @@ The Array format makes use of the other data types mentioned above.
 ```
 
 #### 1.3.7. Object
-Similar to the Array type, the Object type can contain the other objects mentioned above.
-> In this case, **the Name attribute must be included**, unlike in Arrays.
+Similar to the `Array` type, the `Object` type can contain the other objects mentioned above.
+> In this case, **the** `Name` **attribute must be included**, unlike in `Array`.
 
 ```
  - Name: My_Parameter_Object
@@ -241,30 +244,30 @@ Similar to the Array type, the Object type can contain the other objects mention
 ```
 
 #### 1.3.8. Recursivity in Arrays and Objects
-The Array data type can be included inside another field of type Array or Object and vice versa.
+The `Array` and `Object` data type can be included inside another field of type `Array` or `Object` and vice versa.
 
 ```
     -
-      Name: My_Parameter_Array
-      Description: "Example of an Array"
-      Type: array
-      Fields:
-        -
-          Description: "Example of an Array in Array"
-          Type: array
-          Fields:
-            - 
-              Description: "Example of an Object In an Array inside another Array"
-              Type: object
-              Fields:
-                - 
-                  Name: My_Parameter_Int_field
-                  Description: "Example of a Int_Permanent"
-                  Type: int
-                  Max: 10
-                  Min: 0
-                  Behaviour:
-                    Type: Random
+        Name: My_Parameter_Array
+        Description: "Example of an Array"
+        Type: array
+        Fields:
+            -
+                Description: "Example of an Object In an Array"
+                Type: object
+                Fields:
+                    - 
+                        Description: "Example of an Array in Object"
+                        Type: array
+                        Fields:
+                            - 
+                                Name: My_Parameter_Int_field
+                                Description: "Example of a Int_Permanent"
+                                Type: int
+                                Max: 10
+                                Min: 0
+                                Behaviour:
+                                Type: Random
 
 ```
 ## 2. Usage
@@ -279,7 +282,7 @@ Installation of dependencies
 ```
 pip install -r requirements.txt
 ```
-To run it, you need to specify the YAML configuration file with the **--config** or **-c** parameter. Additionally you can include the **--verbose** or **-v** parameter to display more information on the screen.
+To run it, you need to specify the YAML configuration file with the `--config` or `-c` parameter. Additionally you can include the `--verbose` or `-v` parameter to display more information on the screen.
 
 ```
 python src/main.py -c example_config.yml -v
@@ -293,12 +296,12 @@ The certificates must be included in the `certificates` folder so that they are 
 
 During the build you must use the `CONFIG_FILE` parameter with the path to the YAML configuration file you want to use.
 
-Build the container image
+1. Build the container image
 ```
 docker build --build-arg CONFIG_FILE=example_config.yml . -t mockiotopia
 ```
 
-Run
+2. Run
 ```
 docker run mockiotopia
 ```
