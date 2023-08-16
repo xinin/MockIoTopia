@@ -1,12 +1,8 @@
 
 >TODO
-hacer el contenedor
+
+
 probar a poner ruta desde s3 en local tanto para el config como las certs y usar un asume role en local
 
 s3://test-ci-bucket-cph/config.yml
 
-
-
-Añadir en el readme del contenedor que hacer con certiticates
-
-tienen que estar en la carpeta certificates para que se copien en la imagen del contenedor

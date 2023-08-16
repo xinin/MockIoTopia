@@ -113,7 +113,7 @@ Similar to the integer case, the behavior remains consistent; however, an additi
 ```
 #### 1.3.3. Boolean
 
-These parameter types are employed to simulate the behavior of boolean values, which can either be random or adhere to a probability of variation defined by the `VariationProbability` parameter and the specification of the default value using the `Default` parameter. 
+These parameter types are employed to simulate the behavior of boolean values, which can either be random or adhere to a probability of variation defined by the `VariationProbability` parameter and the specification of the default value using the `Default` parameter (0 or 1). 
 
 The resulting values are 0 or 1.
 

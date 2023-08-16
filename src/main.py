@@ -5,7 +5,9 @@ import time
 import ssl
 import json
 import random
+import tempfile
 
+import boto3
 import paho.mqtt.client as mqtt
 import yaml
 from yaml.loader import SafeLoader
@@ -58,6 +60,23 @@ try:
     mqtt_ca_cert = MQTT_config["Certificates"]["ca_cert"]
     mqtt_client_cert = MQTT_config["Certificates"]["client_cert"]
     mqtt_client_key = MQTT_config["Certificates"]["client_key"]
+
+    mqtt_in_s3 = MQTT_config.get("Certificates").get("stored_in_s3")
+    if mqtt_in_s3 is not None:
+
+        def download_cert_from_s3 (path):
+            s3 = boto3.client('s3')
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                parts = path.split('/')
+                bucket_name = parts[2]
+                file_name = '/'.join(parts[3:])
+
+                s3.download_fileobj(bucket_name, file_name, temp_file)
+                return temp_file.name
+
+        mqtt_ca_cert = download_cert_from_s3(mqtt_ca_cert)
+        mqtt_client_cert = download_cert_from_s3(mqtt_client_cert)
+        mqtt_client_key = download_cert_from_s3(mqtt_client_key)
 
     # Callback function on connection establishment
     def on_connect(client, userdata, flags, rc):
