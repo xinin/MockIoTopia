@@ -1,17 +1,25 @@
-# Usa una imagen base de Python
 FROM python:3.10-alpine
 
-# Establece el directorio de trabajo dentro del contenedor
+# Path to the configuration file
+ARG CONFIG_FILE
+
+# Sets the working directory within the container
 WORKDIR /app
 
-# Copia el archivo de requerimientos a la imagen
+# Copy the requirements file to the image
 COPY requirements.txt .
 
-# Instala las dependencias
+# Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia los archivos de tu aplicación al contenedor
-COPY src .
+# Copy application files to the container
+COPY src src
 
-# Ejecuta tu aplicación cuando el contenedor se inicia
-#CMD ["python", "app.py"]
+# Copy application files to the container
+COPY certificates certificates
+
+# Copy configuration file
+COPY $CONFIG_FILE config.yml
+
+# Run application when the container starts
+CMD ["python", "/app/src/main.py", "-c", "config.yml", "-v"]

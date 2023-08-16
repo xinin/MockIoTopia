@@ -1,9 +1,5 @@
 # MockIoTopia
 
->TODO
-hacer el contenedor
-probar a poner ruta desde s3 en local tanto para el config como las certs y usar un asume role en local
-
 ## MQTT Adventures in Simulated IoT
 
 The objective of this tool is the simulation of an IoT device which sends customised messages to an MQTT broker, such as AWS IoT Core.
@@ -70,7 +66,7 @@ In the case of the latter, parameters like **VariationProbability** and **Variat
 
 ``````
     -
-      Name: Int_Random
+      Name: My_Parameter_Int_Random
       Description: "Example of a Int_Random"
       Type: int
       Max: 10
@@ -78,7 +74,7 @@ In the case of the latter, parameters like **VariationProbability** and **Variat
       Behaviour:
         Type: Random
     - 
-      Name: Int_Permanent
+      Name: My_Parameter_Int_Permanent
       Description: "Example of a Int_Permanent"
       Type: int
       Max: 10
@@ -95,7 +91,7 @@ Similar to the integer case, the behavior remains consistent; however, an additi
 
 ```
     -
-      Name: Float_Random
+      Name: My_Parameter_Float_Random
       Description: "Example of a Float_Random"
       Type: float
       Max: 10
@@ -104,7 +100,7 @@ Similar to the integer case, the behavior remains consistent; however, an additi
       Behaviour:
         Type: Random
     - 
-      Name: Float_Permanent
+      Name: My_Parameter_Float_Permanent
       Description: "Example of a Float_Permanent"
       Type: float
       Max: 10
@@ -123,13 +119,13 @@ The resulting values are 0 or 1.
 
 ```
     - 
-      Name: Boolean_Random
+      Name: My_Parameter_Boolean_Random
       Description: "Example of a Boolean_Random"
       Type: boolean
       Behaviour:
         Type: Random
     - 
-      Name: Boolean_Permanent
+      Name: My_Parameter_Boolean_Permanent
       Description: "Example of a Boolean_Permanent"
       Type: boolean
       Behaviour:
@@ -144,14 +140,14 @@ On the other hand, we have the permanent option where we must provide the defaul
 
 ```
 - 
-      Name: String_Random
+      Name: My_Parameter_String_Random
       Description: "Example of a String_Random"
       Type: string
       Behaviour:
         Type: Random
         Length: 50
     - 
-      Name: String_Permanent
+      Name: My_Parameter_String_Permanent
       Description: "Example of a String_Permanent"
       Type: string
       Behaviour:
@@ -160,7 +156,7 @@ On the other hand, we have the permanent option where we must provide the defaul
 ```
 
 #### 1.3.5. Date
-El ultimo tipo de parametro es el campo fecha, el cual cuenta con diferentes formatos.
+The last type of parameter is the date field, which has different formats, which is controlled by the Type field in the Behaviour section.
 
 - **Date_UnixEpoch:** The Unix epoch (or Unix time or POSIX time or Unix timestamp) is the number of seconds that have elapsed since January 1, 1970 (midnight UTC/GMT). 
 >For example 1692170608
@@ -173,19 +169,19 @@ El ultimo tipo de parametro es el campo fecha, el cual cuenta con diferentes for
 
 ```
     - 
-      Name: Date_UnixEpoch
+      Name: My_Parameter_Date_UnixEpoch
       Description: "Example of a Date_UnixEpoch"
       Type: date
       Behaviour:
         Type: UnixEpoch
     - 
-      Name: Date_UnixEpochMilis
+      Name: My_Parameter_Date_UnixEpochMilis
       Description: "Example of a Date_UnixEpochMilis"
       Type: date
       Behaviour:
         Type: UnixEpochMilis
     - 
-      Name: Date_ISO8601
+      Name: My_Parameter_Date_ISO8601
       Description: "Example of a Date_ISO8601"
       Type: date
       Behaviour:
@@ -197,7 +193,7 @@ The Array format makes use of the other data types mentioned above.
 > It is important **not to include the Name field** in the Array components and to indicate them in the order in which you want to have the output order.
 ```
     -
-      Name: Array
+      Name: My_Parameter_Array
       Description: "Example of an Array"
       Type: array
       Fields:
@@ -222,12 +218,12 @@ Similar to the Array type, the Object type can contain the other objects mention
 > In this case, **the Name attribute must be included**, unlike in Arrays.
 
 ```
- - Name: Object
+ - Name: My_Parameter_Object
       Description: "Example of an Object field"
       Type: object
       Fields:
         - 
-          Name: "Int_field"
+          Name: My_Parameter_Int_field
           Description: "Example of a Int_Permanent"
           Type: int
           Max: 10
@@ -237,7 +233,7 @@ Similar to the Array type, the Object type can contain the other objects mention
             VariationProbability: 0.1
             VariationMagnitude: 0.5
         -
-          Name: Date_ISO8601
+          Name: My_Parameter_Date_ISO8601
           Description: "Example of a Date_ISO8601"
           Type: date
           Behaviour:
@@ -249,7 +245,7 @@ The Array data type can be included inside another field of type Array or Object
 
 ```
     -
-      Name: Array
+      Name: My_Parameter_Array
       Description: "Example of an Array"
       Type: array
       Fields:
@@ -262,7 +258,7 @@ The Array data type can be included inside another field of type Array or Object
               Type: object
               Fields:
                 - 
-                  Name: "Int_field"
+                  Name: My_Parameter_Int_field
                   Description: "Example of a Int_Permanent"
                   Type: int
                   Max: 10
@@ -290,8 +286,22 @@ python src/main.py -c example_config.yml -v
 ```
 
 ### 2.2 Container
-TODO
 
+To make use of the tool from the container provided in the `Dockerfile` file, it is done as follows:
+
+The certificates must be included in the `certificates` folder so that they are copied into the container and they must be referenced correctly in the YAML configuration file.
+
+During the build you must use the `CONFIG_FILE` parameter with the path to the YAML configuration file you want to use.
+
+Build the container image
+```
+docker build --build-arg CONFIG_FILE=example_config.yml . -t mockiotopia
+```
+
+Run
+```
+docker run mockiotopia
+```
 
 ## 3. Connecting to an AWS IoTCore
 
