@@ -371,7 +371,7 @@ docker run mockiotopia
 
 #### 2.2.2. S3 Files
 
-As mentioned in the [previous point](#111-configuration-files-in-s3), it is possible to make use of files stored in S3, both for the global configuration file and for the certificates.
+As mentioned in the [previous point](#111-certificates-stored-in-s3), it is possible to make use of files stored in S3, both for the global configuration file and for the certificates.
 
 To do this, follow the steps below:
 
