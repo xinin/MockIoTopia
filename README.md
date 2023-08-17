@@ -83,13 +83,23 @@ MQTT:
 
 To connect to an IoTCore you need to follow these steps
 
-1. From **IoTCore** in the **Security > Certificates** section create a new certificate. 
+1. From **IoTCore** in the `Security > Certificates` section create a new certificate. 
 
 > It is important to download the key and the cert, as well as the pem of the CA at that moment, as it will not be able to be downloaded again later.
 
 2. Then **assign a policy to this certificate** that allows you to connect to IoT and publish messages.
 
-3. To obtain the IoT Core connection endopint, go to the **Settings > Device data endpoint** section.
+3. To obtain the IoT Core connection endopint, go to the `Settings > Device data endpoint` section.
+
+To confirm that the connection and message sending are executed accurately, you can utilize IoT Core's MQTT test client.
+
+- Open the **MQTT test client** provided by IoT Core, `IoTCore > MQTT test client`.
+- Create a **subscription** for the desired topic.
+- Observe messages being received in real time.
+
+>Upon completing your testing, you may need to clear the message queue.
+
+By following this procedure, you can ensure the proper functioning of the connection, message creation and message delivery.
 
 ### 1.2. Miscellanea
 
@@ -397,4 +407,3 @@ docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
     -e AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
     mockiotopia
 ```
-
