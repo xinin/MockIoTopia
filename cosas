@@ -1,8 +1,0 @@
-
->TODO
-
-
-probar a poner ruta desde s3 en local tanto para el config como las certs y usar un asume role en local
-
-s3://test-ci-bucket-cph/config.yml
-

@@ -26,7 +26,7 @@ Messages:
 
 To establish a connection to the MQTT broker, only the option using SSL and with certificates is available.
 
-Below is an example of a configuration
+Below is an example of a configuration:
 
 `````
 MQTT:
@@ -39,6 +39,22 @@ MQTT:
     client_cert: "certificates/certificate.pem.crt"
     client_key: "certificates/private.pem.key"
 `````
+
+#### 1.1.1. Certificates stored in S3
+It is also possible to store the certificates in an S3 bucket. To do this it would be enough to indicate the S3 file path, activate the flag `stored_in_s3: True` and provide the necessary credentials.
+
+```
+MQTT:
+  ClientID: MockIoTopia
+  Host: "a2f8qpo41xhi6t-ats.iot.eu-west-1.amazonaws.com"
+  Port: 8883
+  Topic: "123"
+  Certificates:
+    stored_in_s3: True
+    ca_cert: "s3://my-bucket/certificates/AmazonRootCA1.pem"
+    client_cert: "s3://my-bucket/certificates/certificate.pem.crt"
+    client_key: "s3://my-bucket/certificates/private.pem.key"
+```
 
 ### 1.2. Miscellanea
 
@@ -292,6 +308,8 @@ python src/main.py -c example_config.yml -v
 
 To make use of the tool from the container provided in the `Dockerfile` file, it is done as follows:
 
+#### 2.2.1. Local files
+
 The certificates must be included in the `certificates` folder so that they are copied into the container and they must be referenced correctly in the YAML configuration file.
 
 During the build you must use the `CONFIG_FILE` parameter with the path to the YAML configuration file you want to use.
@@ -304,6 +322,45 @@ docker build --build-arg CONFIG_FILE=example_config.yml . -t mockiotopia
 2. Run
 ```
 docker run mockiotopia
+```
+
+#### 2.2.2. S3 Files
+
+As mentioned in the [previous point](#111-configuration-files-in-s3), it is possible to make use of files stored in S3, both for the global configuration file and for the certificates.
+
+To do this, follow the steps below:
+
+1. Set the AWS credentials in the terminal from which the container image will be built:
+
+```
+export AWS_ACCESS_KEY_ID="...."
+export AWS_SECRET_ACCESS_KEY="...."
+export AWS_SESSION_TOKEN="...."
+`````
+
+2. Initiate the build while changing the parameter `CONFIG_FILE` to `CONFIG_FILE_S3`. Additionally, it is necessary to provide the following parameters to obtain the AWS credentials:
+```
+docker build . --no-cache \
+    --build-arg CONFIG_FILE_S3=s3://<my-bucket>/config.yml \
+    --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+    --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+    --build-arg AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
+    -t mockiotopia
+```
+
+3. Run the container
+
+```
+docker run mockiotopia
+```
+
+If the certificates referenced in the configuration file are also hosted in S3, when executing it, you must include the environment variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN`.
+
+```
+docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+    -e AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
+    mockiotopia
 ```
 
 ## 3. Connecting to an AWS IoTCore
