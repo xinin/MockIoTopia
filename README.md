@@ -1,5 +1,4 @@
 # MockIoTopia
-
 ## MQTT Adventures in Simulated IoT
 
 The objective of this tool is the simulation of an IoT device which sends customised messages to an MQTT broker, such as AWS IoT Core.
@@ -7,6 +6,30 @@ The objective of this tool is the simulation of an IoT device which sends custom
 <p align="center">
   <img src="image.png" alt="Texto alternativo" width="300" height="300">
 </p>
+
+## Table of Contents
+
+- [MockIoTopia](#mockiotopia)
+  - [1. Configuration](#1-configuration)
+    - [1.1. MQTT](#11-mqtt)
+      - [1.1.1. Certificates stored in S3](#111-certificates-stored-in-s3)
+      - [1.1.2. Connecting to an AWS IoTCore](#112-connecting-to-an-aws-iotcore)
+    - [1.2. Miscellanea](#12-miscellanea)
+    - [1.3. Message](#13-messages)
+      - [1.3.1. Integer](#131-integer)
+      - [1.3.2. Float](#132-float)
+      - [1.3.3. Boolean](#133-boolean)
+      - [1.3.4. String](#134-string)
+      - [1.3.5. Date](#135-date)
+      - [1.3.6. Array](#136-array)
+      - [1.3.7. Object](#137-object)
+      - [1.3.8. Recursivity in Arrays and Objects](#138-recursivity-in-arrays-and-objects)
+  - [2. Usage](#2-usage)
+    - [2.1 Local](#21-local)
+    - [2.2 Container](#22-container)
+      - [2.2.1. Local files](#221-local-files)
+      - [2.2.2. S3 Files](#222-s3-files)
+
 
 ## 1. Configuration
 To customize the tool's operation, a YAML configuration file is employed. You can refer to the `example_config.yml` file for instances demonstrating all potential functionalities.
@@ -18,7 +41,7 @@ MQTT:
     # Host configuration
 Miscellanea:
     # Extra tool configurations
-Messages:
+Message:
     # Configuration of the different attributes that the message will have and its characteristics.
 ````
 
@@ -78,7 +101,7 @@ Miscellanea:
   MessageLossProbability: 0.5 #Probability of the message not being sent
 ````
 
-### 1.3. Messages
+### 1.3. Message
 There are different types of fields available to include in messages
 
 > **All fields indicated in each of the types are mandatory.**

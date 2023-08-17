@@ -104,7 +104,7 @@ try:
             time.sleep(1)
 
         while True:
-            message = generate_message(config["Messages"], message)
+            message = generate_message(config["Message"], message)
             if random.random() < loss_probability:
                 print("## MESSAGE LOST ##", message, "\n-------------------------")
             else:

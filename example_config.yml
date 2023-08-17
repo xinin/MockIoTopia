@@ -10,7 +10,7 @@ MQTT:
 Miscellanea:
   IntervalMilis: 2000
   MessageLossProbability: 0.5
-Messages:
+Message:
   Fields:
     - 
       Name: Int_Random
