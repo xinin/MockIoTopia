@@ -56,6 +56,18 @@ MQTT:
     client_key: "s3://my-bucket/certificates/private.pem.key"
 ```
 
+#### 1.1.2. Connecting to an AWS IoTCore
+
+To connect to an IoTCore you need to follow these steps
+
+1. From **IoTCore** in the **Security > Certificates** section create a new certificate. 
+
+> It is important to download the key and the cert, as well as the pem of the CA at that moment, as it will not be able to be downloaded again later.
+
+2. Then **assign a policy to this certificate** that allows you to connect to IoT and publish messages.
+
+3. To obtain the IoT Core connection endopint, go to the **Settings > Device data endpoint** section.
+
 ### 1.2. Miscellanea
 
 This section details general behaviours of the tool.
@@ -362,16 +374,4 @@ docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
     -e AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
     mockiotopia
 ```
-
-## 3. Connecting to an AWS IoTCore
-
-To connect to an IoTCore you need to follow these steps
-
-1. From **IoTCore** in the **Security > Certificates** section create a new certificate. 
-
-> It is important to download the key and the cert, as well as the pem of the CA at that moment, as it will not be able to be downloaded again later.
-
-2. Then **assign a policy to this certificate** that allows you to connect to IoT and publish messages.
-
-3. To obtain the IoT Core connection endopint, go to the **Settings > Device data endpoint** section.
 
