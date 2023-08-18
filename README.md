@@ -25,8 +25,8 @@ The objective of this tool is the simulation of an IoT device which sends custom
       - [1.3.7. Object](#137-object)
       - [1.3.8. Recursivity in Arrays and Objects](#138-recursivity-in-arrays-and-objects)
   - [2. Usage](#2-usage)
-    - [2.1 Local](#21-local)
-    - [2.2 Container](#22-container)
+    - [2.1. Local](#21-local)
+    - [2.2. Container](#22-container)
       - [2.2.1. Local files](#221-local-files)
       - [2.2.2. S3 Files](#222-s3-files)
 
@@ -336,7 +336,7 @@ Once the YAML configuration file is set up, the tool is ready to use.
 
 It can be used directly from local by installing the libraries or from the provided container.
 
-### 2.1 Local
+### 2.1. Local
 
 Installation of dependencies
 
@@ -349,7 +349,7 @@ To run it, you need to specify the YAML configuration file with the `--config` o
 python src/main.py -c example_config.yml -v
 ```
 
-### 2.2 Container
+### 2.2. Container
 
 To make use of the tool from the container provided in the `Dockerfile` file, it is done as follows:
 
