@@ -69,7 +69,7 @@ It is also possible to store the certificates in an S3 bucket. To do this it wou
 ```
 MQTT:
   ClientID: MockIoTopia
-  Host: "a2f8qpo41xhi6t-ats.iot.eu-west-1.amazonaws.com"
+  Host: "xxxxxxx-ats.iot.eu-west-1.amazonaws.com"
   Port: 8883
   Topic: "123"
   Certificates:
