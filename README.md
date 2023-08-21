@@ -81,7 +81,8 @@ MQTT:
 
 #### 1.1.2. Connecting to an AWS IoTCore
 
-To connect to an IoTCore you need to follow these steps
+To connect to AWS IoTCore, the following steps are required.
+It is recommended to have the rest of the configuration file already prepared or use the sample configuration file.
 
 1. From **IoTCore** in the `Security > Certificates` section create a new certificate. 
 

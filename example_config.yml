@@ -1,6 +1,6 @@
 MQTT:
   ClientID: MockIoTopia
-  Host: "a2f8qpo41xhi6t-ats.iot.eu-west-1.amazonaws.com"
+  Host: "<iot-core-domain>-ats.iot.eu-west-1.amazonaws.com"
   Port: 8883
   Topic: "123"
   Certificates:
