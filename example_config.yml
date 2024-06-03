@@ -1,6 +1,6 @@
 MQTT:
   ClientID: MockIoTopia
-  Host: "<iot-core-domain>-ats.iot.eu-west-1.amazonaws.com"
+  Host: "adclc20b0x2b7-ats.iot.eu-west-1.amazonaws.com"
   Port: 8883
   Topic: "123"
   Certificates:
@@ -12,6 +12,43 @@ Miscellanea:
   MessageLossProbability: 0.5
 Message:
   Fields:
+    - 
+      Name: GPS_random
+      Description: "Example of a GPS_random"
+      Type: GPS
+      X: 0.876
+      Y: 25.111
+      Time_between_sends: 3
+      Max_radius: 27
+      Behaviour:
+        Type: Random
+    - 
+      Name: GPS_static
+      Description: "Example of a GPS_static"
+      Type: GPS
+      X: 0.876
+      Y: 25.111
+      Time_between_sends: 3
+      Max_radius: 27
+      Behaviour:
+        Type: Static
+        VariationProbability: 0.5
+        VariationMagnitude: 0.5
+    - 
+      Name: GPS_path
+      Description: "Example of a GPS_static"
+      Type: GPS
+      X: 0.876
+      Y: -0.74
+      Time_between_sends: 3
+      Max_radius: 27
+      Behaviour:
+        Type: Path
+        Increment: 0.5
+        Array_path:
+          - [0,0]
+          - [1,1]
+          - [2,2]
     - 
       Name: Int_Random
       Description: "Example of a Int_Random"

@@ -3,6 +3,7 @@ import traceback
 import random
 import time
 from datetime import datetime
+import math
 
 from exceptions import FieldSyntaxError, FieldNotSupportedError
 
@@ -30,6 +31,8 @@ def generate_message(config, previous_message, is_array=False):
                 new_value = string_field(field_config)
             elif field_type == "date":
                 new_value = date_field(field_config)
+            elif field_type == "GPS":
+                new_value = gps_field(field_config, previuos_message_field)
             elif field_type in ("object", "array"):
                 new_value = generate_message(field_config, previuos_message_field, field_type == "array")
             else:
@@ -158,5 +161,85 @@ def date_field(field_config):
         
     except:
         raise FieldSyntaxError(field_config, "Field Sintaxt Error")
+
+def ensure_new_x_y_inside_radius(org_x, org_y, new_x, new_y,rad):
+    distance = math.sqrt((new_x - org_x)**2 + (new_y - org_y)**2)
+    return distance <= rad
+
+def generate_coordinate_variance(field_value_x,field_value_y,var_magnitude):
+    variation_x = field_value_x * var_magnitude
+    variation_y = field_value_y * var_magnitude
+    field_value_x += random.choice([-1, 1]) * variation_x
+    field_value_y += random.choice([-1, 1]) * variation_y
+    return field_value_x, field_value_y
+
+def generate_random_coordinates(config_x,config_y, max_rad):
+    angle = random.uniform(0, 2 * math.pi)
+    radius = random.uniform(0, max_rad)
+
+    new_x = config_x + radius * math.cos(angle)
+    new_y = config_y + radius * math.sin(angle)
+
+    return new_x, new_y
+
+def current_index_distance_based_(org_x, org_y, path):
+    min_distance = float('inf')
+    step_index = None
+    
+    for i, (x, y) in enumerate(path):
+        distance = math.sqrt((org_x - x)**2 + (org_y - y)**2)
+        if distance < min_distance:
+            min_distance = distance
+            step_index = i
+    
+    return step_index
+
+def delta_coordinates(org_x, org_y, config_x, config_y,path,increment,):
+    nearest_index = current_index_distance_based_(org_x, org_y, path)
+    
+    if nearest_index == len(path)-1 and org_x>=path[len(path)-1][0] and org_y>=path[len(path)-1][1]:
+        return config_x, config_y
+
+    increment_x = random.uniform(0, increment)  
+    increment_y = random.uniform(0, increment)
+    
+    new_org_x = org_x + increment_x
+    new_org_y = org_y + increment_y
+    
+    return new_org_x, new_org_y
+
+def gps_field(field_config, previous_message):
+    try:
+        behaviour = field_config["Behaviour"]
+        max_rad=field_config['Max_radius']
+        config_x=field_config['X']
+        config_y=field_config['Y']
+        time.sleep(field_config['Time_between_sends'])
+
+        if behaviour["Type"] == "Random":
+            x, y= generate_random_coordinates(config_x, config_y, max_rad)
+            return x, y
+        elif behaviour["Type"] == "Static" and previous_message is not None:
+            field_value_x, field_value_y = previous_message
+            if random.random() < behaviour["VariationProbability"]:
+                x,y=generate_coordinate_variance(field_value_x,field_value_y,behaviour['VariationMagnitude'])
+                if not ensure_new_x_y_inside_radius(config_x,config_y,x,y,max_rad):
+                    x,y=generate_coordinate_variance(config_x,config_y,behaviour['VariationMagnitude'])    
+                return x, y
+            else:
+                return field_value_x, field_value_y
+        elif behaviour["Type"] == "Path":
+            if previous_message is not None:
+                org_x, org_y = previous_message
+            else:
+                org_x, org_y=config_x,config_y
+                print(config_x, config_y)
+
+            x, y=delta_coordinates(org_x, org_y,config_x,config_y,behaviour['Array_path'],behaviour['Increment'])
+            return x, y
+    except:
+        raise FieldSyntaxError(field_config, "Field Sintaxt Error")
+
+
 
 
