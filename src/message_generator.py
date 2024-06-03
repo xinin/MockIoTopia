@@ -219,12 +219,15 @@ def gps_field(field_config, previous_message):
         if behaviour["Type"] == "Random":
             x, y= generate_random_coordinates(config_x, config_y, max_rad)
             return x, y
-        elif behaviour["Type"] == "Static" and previous_message is not None:
-            field_value_x, field_value_y = previous_message
+        elif behaviour["Type"] == "Static":
+            if previous_message is not None:
+                field_value_x, field_value_y = previous_message
+            else:
+                field_value_x, field_value_y = config_x, config_y
             if random.random() < behaviour["VariationProbability"]:
                 x,y=generate_coordinate_variance(field_value_x,field_value_y,behaviour['VariationMagnitude'])
                 if not ensure_new_x_y_inside_radius(config_x,config_y,x,y,max_rad):
-                    x,y=generate_coordinate_variance(config_x,config_y,behaviour['VariationMagnitude'])    
+                    x,y=config_x,config_y
                 return x, y
             else:
                 return field_value_x, field_value_y
@@ -233,7 +236,6 @@ def gps_field(field_config, previous_message):
                 org_x, org_y = previous_message
             else:
                 org_x, org_y=config_x,config_y
-                print(config_x, config_y)
 
             x, y=delta_coordinates(org_x, org_y,config_x,config_y,behaviour['Array_path'],behaviour['Increment'])
             return x, y

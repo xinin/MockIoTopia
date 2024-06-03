@@ -27,7 +27,7 @@ Message:
       Description: "Example of a GPS_static"
       Type: GPS
       X: 0.876
-      Y: 25.111
+      Y: 4.111
       Time_between_sends: 3
       Max_radius: 27
       Behaviour:
