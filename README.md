@@ -24,6 +24,7 @@ The objective of this tool is the simulation of an IoT device which sends custom
       - [1.3.6. Array](#136-array)
       - [1.3.7. Object](#137-object)
       - [1.3.8. Recursivity in Arrays and Objects](#138-recursivity-in-arrays-and-objects)
+      - [1.3.9. GPS coordinates](#138-recursivity-in-arrays-and-objects)
   - [2. Usage](#2-usage)
     - [2.1. Local](#21-local)
     - [2.2. Container](#22-container)
@@ -331,6 +332,55 @@ The `Array` and `Object` data type can be included inside another field of type 
                                 Behaviour:
                                 Type: Random
 
+```
+
+#### 1.3.9. GPS coordinates
+Type for GPS coordinates. It has three options controlled by the `Type` field in the `Behaviour` section.
+- **Random**: This type sends random coordinates X,Y giving a central point and a max radius
+- **Static**: For static physical elements it also requires in `Behaviour` the fields `VariationProbability` and `VariationMagnitude` which simulate errors in the measure. `VariationProbability` is the probability the measure has to change and `VariationMagnitude` the factor. In case the cumulative error exceeds the radius given it resets to initial position.
+- **Path**: For elements that move following a defined path. It requieres `Path` which is an array of coordinates, `Increment` the space that covers the element in one iteration and `VariationProbability`and `VariationMagnitude` to emulate the error measure.
+
+```
+    -
+      Name: GPS_random
+      Description: "Example of a GPS_random"
+      Type: GPS
+      X: 0.876
+      Y: 25.111
+      Time_between_sends: 3
+      Max_radius: 27
+      Behaviour:
+        Type: Random
+    - 
+      Name: GPS_static
+      Description: "Example of a GPS_static"
+      Type: GPS
+      X: 0.876
+      Y: 4.111
+      Time_between_sends: 3
+      Max_radius: 27
+      Behaviour:
+        Type: Static
+        VariationProbability: 0.5
+        VariationMagnitude: 0.5
+    - 
+      Name: GPS_path
+      Description: "Example of a GPS_path"
+      Type: GPS
+      X: 0.876
+      Y: -0.74
+      Time_between_sends: 3
+      Max_radius: 27
+      Behaviour:
+        Type: Path
+        Increment: 0.5
+        VariationProbability: 0.5
+        VariationMagnitude: 0.2
+        Array_path:
+          - [0,0]
+          - [-1,-3]
+          - [-4,3]
+          - [-4, 1]
 ```
 ## 2. Usage
 Once the YAML configuration file is set up, the tool is ready to use.

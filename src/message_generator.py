@@ -194,17 +194,17 @@ def current_index_distance_based_(org_x, org_y, path):
     
     return step_index
 
-def delta_coordinates(org_x, org_y, config_x, config_y,path,increment,):
+
+def delta_coordinates(org_x, org_y,path,increment,):
     nearest_index = current_index_distance_based_(org_x, org_y, path)
-    
-    if nearest_index == len(path)-1 and org_x>=path[len(path)-1][0] and org_y>=path[len(path)-1][1]:
-        return config_x, config_y
+        
+    next_ind=(nearest_index+1)%len(path)
 
     increment_x = random.uniform(0, increment)  
     increment_y = random.uniform(0, increment)
     
-    new_org_x = org_x + increment_x
-    new_org_y = org_y + increment_y
+    new_org_x = org_x + increment_x*(path[next_ind][0]-org_x)
+    new_org_y = org_y + increment_y*(path[next_ind][1]-org_y)
     
     return new_org_x, new_org_y
 
@@ -221,23 +221,29 @@ def gps_field(field_config, previous_message):
             return x, y
         elif behaviour["Type"] == "Static":
             if previous_message is not None:
-                field_value_x, field_value_y = previous_message
+                org_x, org_y = previous_message
             else:
-                field_value_x, field_value_y = config_x, config_y
+                org_x, org_y = config_x, config_y
+
             if random.random() < behaviour["VariationProbability"]:
-                x,y=generate_coordinate_variance(field_value_x,field_value_y,behaviour['VariationMagnitude'])
-                if not ensure_new_x_y_inside_radius(config_x,config_y,x,y,max_rad):
+                x,y=generate_coordinate_variance(org_x, org_y,behaviour['VariationMagnitude'])
+                if not ensure_new_x_y_inside_radius(config_x,config_y,org_x,org_y,max_rad):
                     x,y=config_x,config_y
                 return x, y
             else:
-                return field_value_x, field_value_y
+                return org_x,org_y
+
         elif behaviour["Type"] == "Path":
             if previous_message is not None:
                 org_x, org_y = previous_message
             else:
                 org_x, org_y=config_x,config_y
 
-            x, y=delta_coordinates(org_x, org_y,config_x,config_y,behaviour['Array_path'],behaviour['Increment'])
+            x, y=delta_coordinates(org_x, org_y,behaviour['Array_path'],behaviour['Increment'])
+            if random.random() < behaviour["VariationProbability"]:
+                x,y=generate_coordinate_variance(org_x, org_y,behaviour['VariationMagnitude'])
+                return x, y
+
             return x, y
     except:
         raise FieldSyntaxError(field_config, "Field Sintaxt Error")

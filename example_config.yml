@@ -1,6 +1,6 @@
 MQTT:
   ClientID: MockIoTopia
-  Host: "a<iot-core-domain>.iot.eu-west-1.amazonaws.com"
+  Host: "adclc20b0x2b7-ats.iot.eu-west-1.amazonaws.com"
   Port: 8883
   Topic: "123"
   Certificates:
@@ -45,10 +45,13 @@ Message:
       Behaviour:
         Type: Path
         Increment: 0.5
+        VariationProbability: 0.5
+        VariationMagnitude: 0.2
         Array_path:
           - [0,0]
-          - [1,1]
-          - [2,2]
+          - [-1,-3]
+          - [-4,3]
+          - [-4, 1]
     - 
       Name: Int_Random
       Description: "Example of a Int_Random"
