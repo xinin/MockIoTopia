@@ -24,7 +24,7 @@ The objective of this tool is the simulation of an IoT device which sends custom
       - [1.3.6. Array](#136-array)
       - [1.3.7. Object](#137-object)
       - [1.3.8. Recursivity in Arrays and Objects](#138-recursivity-in-arrays-and-objects)
-      - [1.3.9. GPS coordinates](#138-recursivity-in-arrays-and-objects)
+      - [1.3.9. GPS coordinates](#139-GPS-coordinates)
   - [2. Usage](#2-usage)
     - [2.1. Local](#21-local)
     - [2.2. Container](#22-container)
