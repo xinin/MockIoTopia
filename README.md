@@ -336,51 +336,53 @@ The `Array` and `Object` data type can be included inside another field of type 
 
 #### 1.3.9. GPS coordinates
 Type for GPS coordinates. It has three options controlled by the `Type` field in the `Behaviour` section.
-- **Random**: This type sends random coordinates X,Y giving a central point and a max radius
+- **Random**: This type sends random coordinates long,lat giving a central point and a max radius. Each iteration takes in consideration the prior position.
 - **Static**: For static physical elements it also requires in `Behaviour` the fields `VariationProbability` and `VariationMagnitude` which simulate errors in the measure. `VariationProbability` is the probability the measure has to change and `VariationMagnitude` the factor. In case the cumulative error exceeds the radius given it resets to initial position.
 - **Path**: For elements that move following a defined path. It requieres `Path` which is an array of coordinates, `Increment` the space that covers the element in one iteration and `VariationProbability`and `VariationMagnitude` to emulate the error measure.
 
 ```
-    -
+    - 
       Name: GPS_random
       Description: "Example of a GPS_random"
       Type: GPS
-      X: 0.876
-      Y: 25.111
-      Time_between_sends: 3
-      Max_radius: 27
+      X: -6.891552
+      Y: 37.177993 
+      Time_between_sends: 60
+      Max_radius: 0.001796
       Behaviour:
         Type: Random
+        Increment: 0.00001
     - 
       Name: GPS_static
       Description: "Example of a GPS_static"
       Type: GPS
-      X: 0.876
-      Y: 4.111
-      Time_between_sends: 3
-      Max_radius: 27
+      X: -6.891461
+      Y: 37.180385 
+      Time_between_sends: 120
+      Max_radius: 0.001796
       Behaviour:
         Type: Static
         VariationProbability: 0.5
-        VariationMagnitude: 0.5
+        VariationMagnitude: 0.0000001
     - 
       Name: GPS_path
       Description: "Example of a GPS_path"
       Type: GPS
-      X: 0.876
-      Y: -0.74
-      Time_between_sends: 3
-      Max_radius: 27
+      X: -6.899835 
+      Y: 37.173479
+      Time_between_sends: 30
+      Max_radius: 0.05
       Behaviour:
         Type: Path
-        Increment: 0.5
+        Increment: 0.005
         VariationProbability: 0.5
-        VariationMagnitude: 0.2
+        VariationMagnitude: 0.00002
         Array_path:
-          - [0,0]
-          - [-1,-3]
-          - [-4,3]
-          - [-4, 1]
+          - [-6.899835, 37.173479]
+          - [-6.891560, 37.180777]
+          - [-6.889479, 37.179324]
+          - [-6.892161, 37.176358]
+          - [-6.894768, 37.177973]
 ```
 ## 2. Usage
 Once the YAML configuration file is set up, the tool is ready to use.
