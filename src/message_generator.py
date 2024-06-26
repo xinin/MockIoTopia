@@ -3,9 +3,12 @@ import traceback
 import random
 import time
 from datetime import datetime
+import math
 
 from exceptions import FieldSyntaxError, FieldNotSupportedError
 
+
+index=1
 
 def generate_message(config, previous_message, is_array=False):
     current_message = [] if is_array else {}
@@ -30,6 +33,8 @@ def generate_message(config, previous_message, is_array=False):
                 new_value = string_field(field_config)
             elif field_type == "date":
                 new_value = date_field(field_config)
+            elif field_type == "GPS":
+                new_value = gps_field(field_config, previuos_message_field)
             elif field_type in ("object", "array"):
                 new_value = generate_message(field_config, previuos_message_field, field_type == "array")
             else:
@@ -158,5 +163,90 @@ def date_field(field_config):
         
     except:
         raise FieldSyntaxError(field_config, "Field Sintaxt Error")
+
+def ensure_new_x_y_inside_radius(config_x, config_y, new_x, new_y,rad):
+    distance = math.sqrt((new_x - config_x)**2 + (new_y - config_y)**2)
+    return distance <= rad
+
+def generate_coordinate_variance(field_value_x,field_value_y,var_magnitude):
+    variation_x = field_value_x * var_magnitude
+    variation_y = field_value_y * var_magnitude
+    field_value_x += random.choice([-1, 1]) * variation_x
+    field_value_y += random.choice([-1, 1]) * variation_y
+    return field_value_x, field_value_y
+
+def generate_random_coordinates(config_x,config_y, org_x,org_y, max_rad, behaviour):
+    increment=behaviour['Increment']
+    angle = random.uniform(0, 2 * math.pi)
+    radius = random.uniform(1, increment)
+
+    new_x = org_x + radius * math.cos(angle)
+    new_y = org_y + radius * math.sin(angle)
+    while not ensure_new_x_y_inside_radius(config_x, config_y, new_x,new_y,max_rad):
+        angle = random.uniform(0, 2 * math.pi)
+        radius = random.uniform(1, increment)
+
+        new_x = org_x + radius * math.cos(angle)
+        new_y = org_y + radius * math.sin(angle)
+
+    return new_x, new_y
+
+def euclidean_distance(p1, p2):
+    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
+
+def get_target_point(current_position, route, threshold):
+    global index
+    step=index
+    if euclidean_distance(current_position, route[step]) < threshold:
+        target_index = (step + 1) % len(route)
+    else:
+        target_index = step
+
+
+    index=target_index
+    return route[target_index]
+
+def move_to_target(current_position, target_point, increment):
+    direction = (target_point[0] - current_position[0], target_point[1] - current_position[1])
+    distance_to_target = euclidean_distance(current_position, target_point)
+    if distance_to_target < increment:
+        new_position = target_point
+    else:
+        scale = increment / distance_to_target
+        new_position = (current_position[0] + direction[0] * scale, current_position[1] + direction[1] * scale)
+    return new_position
+
+def gps_field(field_config, previous_message):
+    try:
+        behaviour = field_config["Behaviour"]
+        max_rad=field_config['Max_radius']
+        config_x=field_config['X']
+        config_y=field_config['Y']
+        time.sleep(field_config['Time_between_sends'])
+        if previous_message is not None:
+            org_x, org_y = previous_message
+        else:
+            org_x, org_y=config_x,config_y
+        
+        if behaviour["Type"] == "Random":
+            x, y= generate_random_coordinates(config_x, config_y, org_x, org_y, max_rad, behaviour)
+            return x, y
+        elif behaviour["Type"] == "Static":
+            if random.random() < behaviour["VariationProbability"]:
+                x,y=generate_coordinate_variance(org_x, org_y,behaviour['VariationMagnitude'])
+                if not ensure_new_x_y_inside_radius(config_x,config_y,org_x,org_y,max_rad):
+                    x,y=config_x,config_y
+                return x, y
+            else:
+                return org_x,org_y
+
+        elif behaviour["Type"] == "Path":
+            target=get_target_point((org_x,org_y), behaviour['Array_path'], threshold=1e-5)
+            x, y=move_to_target((org_x,org_y), target, behaviour['Increment'])
+            return x, y
+    except:
+        raise FieldSyntaxError(field_config, "Field Sintaxt Error")
+
+
 
 
